@@ -1,0 +1,211 @@
+//
+// Base Settings
+//
+
+html {
+  box-sizing: border-box;
+  font-size: 16px;
+  -ms-overflow-style: scrollbar;
+  // Changes the default tap highlight to be completely transparent in iOS.
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+*, ::after, ::before {
+  box-sizing: inherit;
+}
+
+@-ms-viewport {
+  width: device-width;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+//
+// Variables - Suite the Grid to your own requirements
+//
+
+$fixed-container-width: 1024px;
+$grid-columns: 12;
+$gutter-width: 1rem;
+
+$breakpoints: (
+        xs: 0,
+        sm: 576px,
+        md: 768px,
+        lg: 992px,
+        xl: 1200px
+);
+
+$container-page-gutter: 16px;
+$container-max-widths: (
+        xs: 100%,
+        sm: (map-get($breakpoints, sm) - $container-page-gutter * 2),
+        md: (map-get($breakpoints, md) - $container-page-gutter * 2),
+        lg: (map-get($breakpoints, lg) - $container-page-gutter * 2),
+        xl: (map-get($breakpoints, xl) - $container-page-gutter * 2)
+);
+
+//
+// Responsive media Query Mixin
+//
+
+@mixin break($size) {
+  @if ($size == "xs") {
+    @content
+  } @else {
+    @media (min-width: map-get($breakpoints, $size)) {
+      @content;
+    }
+  }
+}
+
+//
+// Basic Elements -  Container - Row - Padding
+//
+
+.container-full {
+  /*%container-full*/
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;
+  position: relative;
+  padding: 0 ($gutter-width / 2);
+}
+
+.container-fixed {
+  /*%container*/
+  margin-left: auto;
+  margin-right: auto;
+  width: $fixed-container-width;
+  max-width: 100%;
+  position: relative;
+}
+
+.container {
+  /*%container*/
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;
+  position: relative;
+}
+
+.grid-item {
+  /*%grid-item*/
+  position: relative;
+  min-height: 1px;
+  padding-right: $gutter-width / 2;
+  padding-left: $gutter-width / 2;
+}
+
+.row {
+  /*%row*/
+  position: relative;
+  display: flex;
+  flex-flow: row wrap;
+  padding: 0;
+}
+
+.row-padding {
+  /*%row-padding*/
+  position: relative;
+  display: flex;
+  flex-flow: row wrap;
+  padding-right: ($gutter-width / 2);
+  padding-left: ($gutter-width / 2);
+}
+
+.no-padding {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+@each $key, $value in $breakpoints {
+  .#{$key}-grow {
+    @extend .grid-item;
+  }
+  @for $i from 1 through $grid-columns {
+    .#{$key}-#{$i} {
+      @extend .grid-item;
+    }
+  }
+  @include break($key) {
+    @for $i from 1 through $grid-columns {
+      .#{$key}-#{$i} {
+        /*%#{$key}-#{$i}*/
+        flex: 0 0 percentage($i / $grid-columns);
+        max-width: percentage($i / $grid-columns);
+      }
+      .push-#{$key}-#{$i} {
+        /* %push-#{$key}-#{$i}*/
+        left: percentage($i / $grid-columns);
+      }
+      .pull-#{$key}-#{$i} {
+        /* %pull-#{$key}-#{$i}*/
+        right: percentage($i / $grid-columns);
+      }
+      .offset-#{$key}-#{$i} {
+        /* %offset-#{$key}-#{$i}*/
+        margin-left: percentage($i / $grid-columns);
+      }
+      .offset-#{$key}-#{$i}-rtl {
+        /* %offset-#{$key}-#{$i}-rtl*/
+        margin-right: percentage($i / $grid-columns);
+      }
+    }
+    .container {
+      width: map-get($container-max-widths, $key)
+    }
+    .#{$key}-grow {
+      /*%#{$key}-grow*/
+      flex: 1 1 auto;
+    }
+    .position-xy-center-#{$key} {
+      /*%pos-xy-center-#{$key}*/
+      justify-content: center;
+      align-items: center;
+    }
+    .pos-x-fs-#{$key} {
+      /*%pos-x-fs-#{$key}*/
+      justify-content: flex-start;
+    }
+    .pos-x-fe-#{$key} {
+      /*%pos-x-fe-#{$key}*/
+      justify-content: flex-end;
+    }
+    .pos-x-center-#{$key} {
+      /*%pos-x-center-#{$key}*/
+      justify-content: center;
+    }
+    .pos-x-sa-#{$key} {
+      /*%pos-x-sa-#{$key}*/
+      justify-content: space-around;
+    }
+    .pos-x-sb-#{$key} {
+      /*%pos-x-sb-#{$key}*/
+      justify-content: space-between;
+    }
+    .pos-y-fs-#{$key} {
+      /*%pos-y-fs-#{$key}*/
+      align-items: flex-start;
+    }
+    .pos-y-fe-#{$key} {
+      /*%pos-y-fe-#{$key}*/
+      align-items: flex-end;
+    }
+    .pos-y-center-#{$key} {
+      /*%pos-y-center-#{$key}*/
+      align-items: center;
+    }
+    .pos-y-bl-#{$key} {
+      /*%pos-y-bl-#{$key}*/
+      align-items: baseline;
+    }
+    .pos-y-st-#{$key} {
+      /*%pos-y-st-#{$key}*/
+      align-items: stretch;
+    }
+  }
+}
