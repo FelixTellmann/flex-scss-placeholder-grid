@@ -76,7 +76,7 @@ $container-max-widths: (
 }
 
 %container-fixed {
-  /*%container*/
+  /*%container-fixed*/
   margin-left: auto;
   margin-right: auto;
   width: $fixed-container-width;
@@ -92,7 +92,7 @@ $container-max-widths: (
   position: relative;
 }
 
-%grid-item {
+%col {
   /*%grid-item*/
   position: relative;
   min-height: 1px;
@@ -117,6 +117,16 @@ $container-max-widths: (
   padding-left: ($gutter-width / 2);
 }
 
+%row-no-padding {
+  /*%row-padding*/
+  position: relative;
+  display: flex;
+  flex-flow: row wrap;
+  padding: 0;
+  margin-right: -($gutter-width / 2);
+  margin-left: -($gutter-width / 2);
+}
+
 %no-padding {
   padding-right: 0;
   padding-left: 0;
@@ -124,15 +134,11 @@ $container-max-widths: (
 
 @each $key, $value in $breakpoints {
   %#{$key}-grow {
-    @extend %grid-item;
-    @include break($key) {
-      /*%#{$key}-grow*/
-      flex: 1 1 auto;
-    }
+    @extend %col;
   }
   @for $i from 1 through $grid-columns {
     %#{$key}-#{$i} {
-      @extend %grid-item;
+      @extend %col;
     }
   }
   @include break($key) {
@@ -162,7 +168,11 @@ $container-max-widths: (
     %container {
       width: map-get($container-max-widths, $key)
     }
-    %position-xy-center-#{$key} {
+    %#{$key}-grow {
+      /*%#{$key}-grow*/
+      flex: 1 1 auto;
+    }
+    %pos-xy-center-#{$key} {
       /*%pos-xy-center-#{$key}*/
       justify-content: center;
       align-items: center;
